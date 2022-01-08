@@ -20,8 +20,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      // how to validate??
-      validate: [validateEmail, 'Please fill a valid email address']
+      validate: [validateEmail, 'Please enter a valid email address']
     },
 
     thoughts: [
