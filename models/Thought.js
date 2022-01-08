@@ -26,7 +26,7 @@ const thoughtSchema = new Schema(
     // TODO: Done add reactions
     reactions: [
       {
-        type: Schema.Types.ObjectId,
+        type: reactionSchema,
         ref: 'Reaction',
       }
     ],

@@ -1,4 +1,4 @@
-const { Thought, User, Reaction } = require('../models');
+const { Thought, User } = require('../models');
 const { populate } = require('../models/User');
 //Endpoint: /api/thoughts
 const thoughtController = {
@@ -108,22 +108,15 @@ const thoughtController = {
 	// add a reaction to a thought
 	addReaction(req, res) {
 		//  TODO: Done add reaction to thought's reaction array
-		console.log('add Reaction :', req.params, req.body);
-		Reaction.create(req.body)
-			.then((reaction) => {
-				return Thought.findOneAndUpdate(
-					{ _id: req.params.thoughtId },
-					{
-						$addToSet: { reactions: req.params.reactionId }
-					},
-					{ new: true }
-				);
-			})
-			.then(
-				(dbUserData) =>
+		Thought.findOneAndUpdate(
+			{ _id: req.params.thoughtId },
+			{ $addToSet: { reactions: req.body } },
+			{ new: true }
+		)
+			.then((dbUserData) =>
 					!dbUserData
 						? res.status(404).json({ message: 'Reaction created, but no thought with this id!' })
-						: res.json(`Created the reaction for ${dbUserData}`)
+						: res.json('Created the reaction 🎉')
 			)
 			.catch((err) => {
 				console.log(err);
@@ -134,14 +127,14 @@ const thoughtController = {
 	// remove reaction from a thought
 	removeReaction(req, res) {
 		// TODO: Done remove reaction from thoughts
-		User.findOneAndUpdate(
+		Thought.findOneAndUpdate(
 			{ _id: req.params.thoughtId },
-			{ $pull: { reactions: req.params.reactionId } },
+			{ $pull: { reactions: req.params.reactionId }},
 			{ new: true }
 		)
 			.then((dbUserData) => {
 				if (!dbUserData) {
-					return res.status(404).json({ message: 'No thought with this id!' });
+					return res.status(404).json({ message: 'No thought/reaction with this id!' });
 				}
 				res.json(dbUserData);
 			})
